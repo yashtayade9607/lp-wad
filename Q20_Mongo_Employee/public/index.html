@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Employee Management</title>
+<style>
+body {
+    font-family: Arial;
+    background: #f4f4f4;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 2px 2px 8px gray;
+}
+
+input {
+    margin: 5px;
+    padding: 5px;
+}
+
+button {
+    padding: 6px 10px;
+    margin: 5px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+table {
+    width: 100%;
+    background: white;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Employee Management System</h1>
+
+<div class="container">
+<h3>Add Employee</h3>
+<input id="name" placeholder="Name">
+<input id="dept" placeholder="Department">
+<input id="desi" placeholder="Designation">
+<input id="salary" type="number" placeholder="Salary">
+<input id="date" type="date">
+<button onclick="addEmployee()">Add</button>
+</div>
+
+<div class="container">
+<button onclick="loadEmployees()">Display Employees</button>
+</div>
+
+<div class="container">
+<h3>Delete Employee</h3>
+<input id="delname" placeholder="Enter Name">
+<button onclick="deleteEmployee()">Delete</button>
+</div>
+
+<div class="container">
+<h3>Update Salary</h3>
+<input id="upname" placeholder="Enter Name">
+<input id="upsalary" type="number" placeholder="New Salary">
+<button onclick="updateEmployee()">Update</button>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Department</th>
+<th>Designation</th>
+<th>Salary</th>
+<th>Joining Date</th>
+</tr>
+</thead>
+<tbody id="list"></tbody>
+</table>
+
+<script>
+const BASE = "http://localhost:3000";
+
+// ADD
+async function addEmployee() {
+    const data = {
+        name: document.getElementById("name").value,
+        department: document.getElementById("dept").value,
+        designation: document.getElementById("desi").value,
+        salary: Number(document.getElementById("salary").value),
+        joining_date: document.getElementById("date").value
+    };
+
+    await fetch(BASE + "/api/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+
+    alert("Employee Added");
+    loadEmployees();
+}
+
+// DISPLAY
+async function loadEmployees() {
+    const res = await fetch(BASE + "/api/display");
+    const data = await res.json();
+
+    document.getElementById("list").innerHTML = data.map(p => `
+        <tr>
+            <td>${p.name}</td>
+            <td>${p.department}</td>
+            <td>${p.designation}</td>
+            <td>${p.salary}</td>
+            <td>${p.joining_date}</td>
+        </tr>
+    `).join('');
+}
+
+// DELETE
+async function deleteEmployee() {
+    const name = document.getElementById("delname").value;
+
+    await fetch(`${BASE}/api/delete/${name}`, {
+        method: "DELETE"
+    });
+
+    alert("Deleted Successfully");
+    loadEmployees();
+}
+
+// UPDATE
+async function updateEmployee() {
+    const name = document.getElementById("upname").value;
+    const salary = document.getElementById("upsalary").value;
+
+    await fetch(`${BASE}/api/update/${name}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ salary: salary })
+    });
+
+    alert("Updated Successfully");
+    loadEmployees();
+}
+</script>
+
+</body>
+</html>

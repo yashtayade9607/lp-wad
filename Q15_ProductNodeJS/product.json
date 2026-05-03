@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "Minimalist Watch",
+    "price": 89.99,
+    "image": "https://via.placeholder.com/150"
+  },
+  {
+    "id": 2,
+    "name": "Leather Backpack",
+    "price": 120.00,
+    "image": "https://via.placeholder.com/150"
+  },
+  {
+    "id": 3,
+    "name": "Wireless Earbuds",
+    "price": 59.50,
+    "image": "https://via.placeholder.com/150"
+  }
+]

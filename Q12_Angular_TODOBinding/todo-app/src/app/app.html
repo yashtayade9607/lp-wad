@@ -1,0 +1,19 @@
+<div style="text-align:center; width:400px; margin:auto;">
+  <h2>To-Do List</h2>
+
+  <input [(ngModel)]="task" placeholder="Enter task">
+
+  <button (click)="addTask()">
+    {{ editIndex === -1 ? 'Add' : 'Update' }}
+  </button>
+
+  <hr>
+
+  <ul>
+    <li *ngFor="let t of tasks; let i = index">
+      {{ t }}
+      <button (click)="editTask(i)">Edit</button>
+      <button (click)="deleteTask(i)">Delete</button>
+    </li>
+  </ul>
+</div>

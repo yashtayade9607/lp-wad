@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TODO App</title>
+</head>
+<body>
+
+<h1>Welcome to the Todo App</h1>
+
+<input type="text" placeholder="Enter the Task" id="taskinput">
+<button onclick="addTask()">Add Task</button>
+
+<ul id="list"></ul>
+
+<script>
+const API_GET = "http://localhost:3000/alltask";
+const API_ADD = "http://localhost:3000/add";
+
+function loadTask() {
+    const container = document.getElementById("list");
+
+    fetch(API_GET)
+    .then(res => res.json())
+    .then(data => {
+        container.innerHTML = data.map(p => `
+            <li>
+                ${p.des}
+                <button onclick="editTask(${p.id})">Edit</button>
+                <button onclick="deleteTask(${p.id})">Delete</button>
+            </li>
+        `).join('');
+    });
+}
+
+function addTask() {
+    const task = document.getElementById("taskinput").value;
+
+    fetch(API_ADD, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ text: task })
+    })
+    .then(() => {
+        loadTask();
+        document.getElementById("taskinput" ).value = "";
+    });
+}
+
+function deleteTask(id) {
+    fetch(`http://localhost:3000/delete/${id}`, {
+        method: "DELETE"
+    })
+    .then(() => loadTask());
+}
+
+function editTask(id) {
+    const newTask = prompt("Enter new task:");
+    if (!newTask) return;
+
+    fetch(`http://localhost:3000/update/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ text: newTask })
+    })
+    .then(() => loadTask());
+}
+
+// Auto load when page opens
+window.onload = loadTask;
+</script>
+
+</body>
+</html>

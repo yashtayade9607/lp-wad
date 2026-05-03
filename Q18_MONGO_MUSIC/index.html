@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Managemnent</title>
+</head>
+<body>
+    <form >
+        <input type="text"  id="director" placeholder="Enter the Name of the Director " >
+        <button onclick="search(event)">Search</button>
+        <h1>Songs of Director </h1>
+        <div id="list">
+Loading
+        </div>
+    </form>
+    <br>
+    <!--  Add the Fevourate Song  -->
+      <h2> Add the Feviurate Song </h2>
+      <input type="text" placeholder="Enter the Song name " id="songname">
+      <input type="text" placeholder="Enter the Director name " id="director1">
+      <input type="text" placeholder="Enter the Film Name " id="film">
+      <input type="text" placeholder="Enter the Singer Name " id="singer">
+      <button onclick="addSong(event)">Add</button>
+
+      <p id="msg"></p>
+    <script>
+        async function addSong( e)
+        {
+            e.preventDefault();
+            const song = {
+                songName : document.getElementById("songname").value,
+                filmName : document.getElementById("film").value,
+                Director : document.getElementById("director1").value,
+                singer : document.getElementById("singer").value,
+            };
+
+            const response = await fetch( "http://localhost:3000/add" , {
+                "method" : "POST" ,
+                headers : {
+                    "Content-Type" : "application/json" 
+                },
+                body : JSON.stringify(song)
+
+            });
+            const msg = await response.text();
+            document.getElementById("msg").innerHTML= msg;
+
+        }
+        // addSong();
+        async function search(e)
+        {
+            e.preventDefault();
+            let director = document.getElementById("director").value;
+            const response = await fetch( `http://localhost:3000/music/${director}`);
+            const data = await response.json();
+            let list = document.getElementById("list");
+             
+            list.innerHTML = data.map(p=>(
+            ` <p>${p.songName} </p>`
+            )).join('');
+        } 
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+[
+    {
+      "name": "Amit Sharma",
+      "designation": "Software Engineer",
+      "department": "IT",
+      "salary": 60000,
+      "image": "https://placehold.co/800x800/png"
+    },
+    {
+      "name": "Neha Verma",
+      "designation": "HR Manager",
+      "department": "Human Resources",
+      "salary": 55000,
+      "image": "https://placehold.co/800x800/png"
+    }
+  ]
+  

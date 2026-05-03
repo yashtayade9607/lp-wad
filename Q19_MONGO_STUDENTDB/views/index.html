@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Management System</title>
+    <style>
+        body { font-family: Arial; }
+        .card {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            box-shadow: 2px 2px 5px gray;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        table { width: 100%; }
+    </style>
+</head>
+<body>
+
+<h1>Student Data</h1>
+
+<div class="card">
+    <button onclick="loadData('/api/display')">Display All</button>
+    <button onclick="loadData('/api/dsbda20')">DSBDA > 20</button>
+    <button onclick="loadData('/api/all25')">All > 25</button>
+    <button onclick="loadData('/api/wadcc')">WAD & CC < 40</button>
+</div>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Roll</th>
+            <th>WAD</th>
+            <th>CC</th>
+            <th>DSBDA</th>
+            <th>CNS</th>
+            <th>AI</th>
+        </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+</table>
+
+<br>
+
+<h3>Delete Student</h3>
+<input type="text" id="deleteName" placeholder="Enter Name">
+<button onclick="deleteStudent()">Delete</button>
+
+<br><br>
+
+<h3>Update Marks (+10)</h3>
+<input type="text" id="updateName" placeholder="Enter Name">
+<button onclick="updateStudent()">Update</button>
+
+<p id="result"></p>
+
+<script>
+const BASE = "http://localhost:3000";
+
+async function loadData(url) {
+    const res = await fetch(BASE + url);
+    const data = await res.json();
+
+    document.getElementById("tbody").innerHTML = data.map(p => `
+        <tr>
+            <td>${p.Name}</td>
+            <td>${p.Roll_No}</td>
+            <td>${p.WAD_Marks}</td>
+            <td>${p.CC_Marks}</td>
+            <td>${p.DSBDA_Marks}</td>
+            <td>${p.CNS_Marks}</td>
+            <td>${p.AI_Marks}</td>
+        </tr>
+    `).join('');
+}
+
+async function deleteStudent() {
+    const name = document.getElementById("deleteName").value;
+
+    const res = await fetch(`${BASE}/api/delete/${name}`, {
+        method: "DELETE"
+    });
+
+    const data = await res.json();
+    document.getElementById("result").innerText = data.message;
+
+    loadData('/api/display');
+}
+
+async function updateStudent() {
+    const name = document.getElementById("updateName").value;
+
+    const res = await fetch(`${BASE}/api/update/${name}`, {
+        method: "PUT"
+    });
+
+    const data = await res.json();
+    document.getElementById("result").innerText = data.message;
+
+    loadData('/api/display');
+}
+</script>
+
+</body>
+</html>

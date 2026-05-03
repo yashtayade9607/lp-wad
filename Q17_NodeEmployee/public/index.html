@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        #employeeList {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            box-shadow: 2px 2px 10px gray;
+            padding: 15px;
+            width: 220px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .card h3 {
+            margin: 10px 0;
+        }
+
+        .card p {
+            margin: 5px 0;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Employee Details</h1>
+
+<div id="employeeList">Employee Loading...</div>
+
+<script>
+    async function getEmployee() {
+        try {
+            const response = await fetch("http://localhost:3000/api/employee");
+            const data = await response.json();
+
+            console.log(data);
+
+            const container = document.getElementById("employeeList");
+
+            container.innerHTML = data.map(p => `
+                <div class="card">
+                    <img src="${p.image}" alt="${p.name}">
+                    <h3>${p.name}</h3>
+                    <p>Designation: ${p.designation}</p>
+                    <p>Salary: ₹${p.salary}</p>
+                    <p>Department: ${p.department}</p>
+                </div>
+            `).join('');
+
+        } catch (err) {
+            document.getElementById("employeeList").innerText = "Error loading data";
+        }
+    }
+
+    getEmployee();
+</script>
+
+</body>
+</html>

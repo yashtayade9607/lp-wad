@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Mangement</title>
+    <style>
+        body{
+            background-color: azure;
+            align-items: center;
+            gap: 10px;
+        }
+        .container{
+            padding: 20px;
+            margin: 2px;
+            /* background-color: ; */
+            box-shadow: 2px 2px 2px 2px grey;
+            gap: 10px;
+        }
+        button:hover{
+            background-color: blue;
+            color: white;
+            cursor: pointer;
+            padding: 5px;
+            margin: 3px;
+        }
+        input{
+            padding: 10px;
+            margin: 2px;
+            background-color: aliceblue;
+            box-shadow: 2px 2px 2px 2px grey;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book Management</h1>
+    <div class="container"> 
+        <h2>Add Book</h2>
+        <input type="text" placeholder="Book title" id="title">
+        <input type="text" placeholder="Book Author" id="author">
+        <input type="text" placeholder="Book Price" id="price">
+        <input type="text" placeholder="Book genre" id="genre">
+        <button onclick="addBook()">Add Book</button>
+    </div>
+    <br>
+    <div class="container"> 
+        <h2>Update Book Data</h2>
+        <input type="text" placeholder="Enter title" id="utitle">
+        <input type="text" placeholder="Enter price" id="uprice">
+        <button onclick="updateBook()">Update Data</button>
+    </div>
+    <br>
+    <div class="container"> 
+        <h2>Delete Book Data</h2>
+        <input type="text" placeholder="Enter title" id="dtitle">
+        <button onclick="deleteBook()">Delete Data</button>
+    </div>
+    <br>
+    <div class="container"> 
+       
+        <button onclick="loadData()">View Data</button>
+    </div>
+    <br>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Price</th>
+                <th>Genre</th>
+            </tr>
+        </thead>
+        <tbody id="list">
+
+        </tbody>
+    </table>
+    <script>
+        const BASE = "http://localhost:3000/api";
+        async function addBook()
+        {
+            // const container = document.getElementById("list");
+            const data = {
+                title : document.getElementById("title").value,
+                author : document.getElementById("author").value,
+                price : document.getElementById("price").value,
+                genre : document.getElementById("genre").value
+            };
+
+            await fetch(`${BASE}/add` ,{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body : JSON.stringify(data)
+            });
+            alert("Record Added!");
+            loadData();
+        }
+        async function loadData()
+        {
+            const response  = await fetch(`${BASE}/view`);
+
+            const data  = await response.json();
+            const container = document.getElementById("list");
+            container.innerHTML = data.map(p=>(
+                `
+                    <tr>
+                        <td>${p.title}</td>
+                        <td>${p.author}</td>
+                        <td>${p.price}</td>
+                        <td>${p.genre}</td>
+                    </tr>
+                `
+            )).join('') ;
+
+        }
+        async function updateBook()
+        {
+            const title = document.getElementById("utitle").value;
+
+            const price = document.getElementById("uprice").value;
+
+            fetch(`${BASE}/update/${title}`,{
+                method :"PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({price : price}),
+            });
+            alert("item Info updated ");
+            loadData();
+        }
+        async function deleteBook(){
+            const title = document.getElementById("dtitle").value;
+            await fetch(`${BASE}/delete/${title}` , {
+                method:"DELETE",
+                headers :{
+                    "Content-Type":"application/json"
+                },
+            });
+            loadData();
+        }
+
+    </script>
+    
+</body>
+</html>

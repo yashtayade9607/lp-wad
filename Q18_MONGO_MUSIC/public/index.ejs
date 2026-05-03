@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music System </title>
+</head>
+<body>
+    <table>
+        <thead>
+            <th>songname</th>
+            <th>filmName</th>
+            <th>Director</th>
+            <th>Singer</th>
+        </thead>
+         <tbody>
+            <% songs.forEach(song => { %>
+                <tr>
+                    <td><%= song.songName %></td>
+                    <td><%= song.filmName %></td>
+                    <td><%= song.Director %></td>
+                    <td><%= song.singer %></td>
+                    <td><%= song.actor || '-' %></td>
+                    <td><%= song.actress %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <form action="/delete" method="POST">
+        <input type="text"  name="songname" placeholder="Enter the Song Name">
+        <button >Delete</button>
+    </form>
+    
+    
+</body>
+</html>
